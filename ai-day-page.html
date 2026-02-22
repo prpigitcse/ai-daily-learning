@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantization for TinyML — AI Logbook</title>
+    <!-- Tailwind CSS 4+ -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+        :root {
+            --background: #fafafa;
+            --foreground: #18181b;
+            --card: #ffffff;
+            --card-border: #e4e4e7;
+            --muted: #71717a;
+            --muted-bg: #f4f4f5;
+            --accent: #6d28d9;
+            --accent-light: #8b5cf6;
+            --accent-bg: #ede9fe;
+            --code-bg: #1e1e2e;
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--background);
+            color: var(--foreground);
+            line-height: 1.7;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Typography spacing for long-form content */
+        article section {
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 700;
+        }
+
+        h2::after {
+            content: "";
+            height: 1px;
+            background: var(--card-border);
+            flex-grow: 1;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            color: #d1d1e0;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .math-block {
+            background: white;
+            border: 1px solid var(--card-border);
+            padding: 2rem;
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+        }
+
+        .explanation-item {
+            position: relative;
+            padding-left: 1.5rem;
+            border-left: 2px solid var(--accent-bg);
+        }
+
+        .explanation-item:hover {
+            border-left-color: var(--accent);
+        }
+
+        * {
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-violet-100">
+
+    <!-- Header Section -->
+    <header class="max-w-2xl mx-auto pt-24 pb-16 px-6 text-center">
+      <!-- Square Logo -->
+      <div
+        class="w-12 h-12 bg-violet-700 rounded-xl flex items-center justify-center mb-6 mx-auto shadow-lg shadow-violet-200"
+      >
+        <svg
+          class="w-6 h-6 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+          />
+        </svg>
+      </div>
+
+      <div
+        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-50 border border-violet-100 mb-6"
+      >
+        <div class="w-2 h-2 rounded-full bg-violet-600 animate-pulse"></div>
+        <span
+          class="mono text-[10px] font-bold uppercase tracking-wider text-violet-700"
+          >Live Learning Feed</span
+        >
+      </div>
+
+      <h1 class="text-4xl font-semibold tracking-tight text-zinc-900 mb-3">
+        AI <span class="text-violet-700">Logbook</span>
+      </h1>
+      <p class="text-zinc-500 text-lg font-light leading-relaxed">
+        A structured public trail of learning artificial intelligence.
+      </p>
+    </header>
+
+    <!-- Entry Content -->
+    <main class="max-w-2xl mx-auto pb-24 px-6">
+        
+        <article>
+            <!-- Section 1: Theory -->
+            <section>
+                <h2 class="mono">The Theory</h2>
+                <div class="text-zinc-600 space-y-4">
+                    <p>
+                        Quantization is the process of mapping continuous (floating-point) values to a smaller set of discrete levels. In the context of TinyML, this typically means converting 32-bit floating-point weights ($FP32$) to 8-bit integers ($INT8$).
+                    </p>
+                    <p>
+                        The goal is to reduce the memory footprint and increase inference speed on microcontrollers without significant loss in model accuracy. By reducing precision, we drastically lower the energy cost of memory access, which is often the primary bottleneck in edge devices.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 2: Math -->
+            <section>
+                <h2 class="mono">The Math</h2>
+                <div class="text-zinc-600">
+                    <p class="mb-4">The basic uniform affine quantization transformation is defined as:</p>
+                    
+                    <div class="math-block mono">
+                        $$Q(r) = \text{round}\left(\frac{r}{S} + Z\right)$$
+                    </div>
+
+                    <div class="space-y-4 mt-6">
+                        <div class="flex gap-4 items-start">
+                            <span class="mono text-violet-600 font-bold">$r$</span>
+                            <p class="text-sm">The real-valued input (floating point weight or activation).</p>
+                        </div>
+                        <div class="flex gap-4 items-start">
+                            <span class="mono text-violet-600 font-bold">$S$</span>
+                            <p class="text-sm">The scale factor (a positive floating point number).</p>
+                        </div>
+                        <div class="flex gap-4 items-start">
+                            <span class="mono text-violet-600 font-bold">$Z$</span>
+                            <p class="text-sm">The zero-point (an integer representing the real value 0).</p>
+                        </div>
+                    </div>
+                    
+                    <p class="mt-8 text-sm italic border-l-2 border-zinc-200 pl-4 py-1">
+                        To recover the approximate real value ($r \approx \hat{r}$), we use: 
+                        <span class="mono text-violet-600 ml-2">$$\hat{r} = S(Q - Z)$$</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 3: Code & Explanation -->
+            <section>
+                <h2 class="mono">The Code</h2>
+                <div class="space-y-8">
+                    <!-- Code Block -->
+                    <div class="code-block mono leading-relaxed">
+<pre class="whitespace-pre-wrap">
+import numpy as np
+
+def quantize_tensor(r, num_bits=8):
+    # Determine the range
+    r_min, r_max = r.min(), r.max()
+    
+    # Calculate scale (S)
+    q_min, q_max = 0, (2**num_bits) - 1
+    S = (r_max - r_min) / (q_max - q_min)
+    
+    # Calculate zero-point (Z)
+    Z = q_min - np.round(r_min / S)
+    Z = np.clip(Z, q_min, q_max)
+    
+    # Quantize
+    q = np.round(r / S + Z)
+    return np.clip(q, q_min, q_max).astype(np.uint8), S, Z
+</pre>
+                    </div>
+
+                    <!-- Explanation -->
+                    <div class="grid grid-cols-1 gap-6">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+                            Logic Breakdown
+                        </h3>
+                        
+                        <div class="explanation-item">
+                            <p class="text-sm font-semibold mb-1 text-zinc-900">1. Min-Max Calculation</p>
+                            <p class="text-xs text-zinc-500">We first observe the dynamic range of the layer's weights to ensure we map the scale factor across the entire spread of values.</p>
+                        </div>
+
+                        <div class="explanation-item">
+                            <p class="text-sm font-semibold mb-1 text-zinc-900">2. Scale Factor (S)</p>
+                            <p class="text-xs text-zinc-500">The scale maps the real range to the available bit-depth (e.g., 255 levels for 8-bit).</p>
+                        </div>
+
+                        <div class="explanation-item">
+                            <p class="text-sm font-semibold mb-1 text-zinc-900">3. Zero-Point Adjustment</p>
+                            <p class="text-xs text-zinc-500">Crucial for asymmetric distributions; it ensures that the value 0.0 in the real world maps exactly to an integer in the quantized space.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </article>
+
+    </main>
+
+    <!-- Shared Footer -->
+    <footer class="max-w-2xl mx-auto px-6 pb-24 text-center">
+        <div class="h-px bg-zinc-100 w-full mb-12"></div>
+        <div class="flex flex-col gap-4">
+            <div class="flex items-center justify-center gap-2 text-zinc-400 text-[10px] mono uppercase tracking-widest">
+                <span>Built with consistency</span>
+                <span class="text-zinc-200">·</span>
+                <span class="text-zinc-800 font-bold">AI Logbook</span>
+            </div>
+            
+            <p class="text-zinc-400 text-xs">
+                © 2026 Pradosh. Educational content for personal learning and reference.
+            </p>
+            
+            <div class="flex items-center justify-center gap-3 text-[10px] mono uppercase tracking-tighter text-zinc-400">
+                <a href="#" class="hover:text-violet-600 transition-colors underline decoration-zinc-100 underline-offset-4">Privacy Policy</a>
+                <span class="text-zinc-200">·</span>
+                <a href="#" class="hover:text-violet-600 transition-colors underline decoration-zinc-100 underline-offset-4">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
