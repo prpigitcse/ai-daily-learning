@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { LearningEntry, MetaData } from './types';
+import { LearningEntry, MetaData, GroupedEntries } from './types';
 
 const learningDirectory = path.join(process.cwd(), 'learning');
 
@@ -146,8 +146,10 @@ export function groupEntriesByWeek(entries: LearningEntry[]) {
         }));
 }
 
-export function groupWeeksByMonth(weeks: any[]) {
-    const grouped: { [monthKey: string]: { month: string; weeks: any[] } } = {};
+export type WeekData = ReturnType<typeof groupEntriesByWeek>[number];
+
+export function groupWeeksByMonth(weeks: WeekData[]): GroupedEntries[] {
+    const grouped: { [monthKey: string]: GroupedEntries } = {};
 
     weeks.forEach(week => {
         if (!grouped[week.monthKey]) {

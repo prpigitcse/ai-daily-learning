@@ -27,7 +27,7 @@ export default async function Home({
   return (
     <div className="relative flex gap-8">
       <div id="log-container" className="flex-grow space-y-12 pb-12">
-        {grouped.map((monthData: any, idx) => (
+        {grouped.map((monthData, idx) => (
           <TimelineMonth
             key={idx}
             month={monthData.month}

@@ -1,4 +1,5 @@
 import { getAllEntries, groupEntriesByWeek, groupWeeksByMonth } from "@/lib/parser";
+import { GroupedEntries } from "@/lib/types";
 import { ArticleSection } from "@/components/content/ArticleSection";
 import Link from "next/link";
 
@@ -22,13 +23,13 @@ export default async function SitemapPage() {
                                 {monthData.month}
                             </h3>
                             <div className="space-y-8">
-                                {monthData.weeks.map((week, wIdx) => (
+                                {monthData.weeks.map((week: any, wIdx: number) => (
                                     <div key={wIdx} className="pl-4 border-l border-card-border">
                                         <h4 className="text-xs font-semibold text-muted mb-4">
                                             {week.weekRange}
                                         </h4>
                                         <ul className="space-y-3">
-                                            {week.days.map((day, dIdx) => (
+                                            {week.days.map((day: any, dIdx: number) => (
                                                 <li key={dIdx}>
                                                     <Link
                                                         href={`/${day.slug}`}
