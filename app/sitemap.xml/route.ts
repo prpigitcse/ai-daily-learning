@@ -1,39 +1,37 @@
 import { getAllEntries } from "@/lib/parser";
 
 export async function GET() {
-    const entries = await getAllEntries();
-    const baseUrl = "https://ai.ppradosh.com";
+  const entries = await getAllEntries();
+  const baseUrl = "https://ai.ppradosh.com";
 
-    const staticPages = [
-        "",
-        "/privacy",
-        "/sitemap",
-    ];
+  const staticPages = [
+    "",
+  ];
 
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${staticPages
-            .map((page) => `
+      .map((page) => `
   <url>
     <loc>${baseUrl}${page}</loc>
     <changefreq>daily</changefreq>
     <priority>${page === "" ? "1.0" : "0.8"}</priority>
   </url>`)
-            .join("")}
+      .join("")}
   ${entries
-            .map((entry) => `
+      .map((entry) => `
   <url>
     <loc>${baseUrl}/${entry.slug}</loc>
     <lastmod>${entry.date.toISOString().split("T")[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>`)
-            .join("")}
+      .join("")}
 </urlset>`;
 
-    return new Response(xml, {
-        headers: {
-            "Content-Type": "application/xml",
-        },
-    });
+  return new Response(xml, {
+    headers: {
+      "Content-Type": "application/xml",
+    },
+  });
 }

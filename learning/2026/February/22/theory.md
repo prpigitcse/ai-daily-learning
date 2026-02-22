@@ -1,4 +1,4 @@
-# 🤖 AI/ML Concept (20 Mins): Feature Representation
+# 🤖 AI/ML Concept: Feature Representation
 
 Computers do not natively understand real-world concepts like a "house," an "image," or a "song." To feed data into a Machine Learning model, we must translate these entities into vectors. This critical first step is called **feature representation**.
 

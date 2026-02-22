@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "prebuild": "tsx lib/validate.ts",
+    "build": "npm run validate && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "validate": "tsx lib/validate.ts"
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",

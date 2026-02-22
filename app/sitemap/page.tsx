@@ -1,4 +1,4 @@
-import { getAllEntries, groupEntries } from "@/lib/parser";
+import { getAllEntries, groupEntriesByWeek, groupWeeksByMonth } from "@/lib/parser";
 import { ArticleSection } from "@/components/content/ArticleSection";
 import Link from "next/link";
 
@@ -9,7 +9,8 @@ export const metadata = {
 
 export default async function SitemapPage() {
     const entries = await getAllEntries();
-    const grouped = groupEntries(entries);
+    const weeks = groupEntriesByWeek(entries);
+    const grouped = groupWeeksByMonth(weeks);
 
     return (
         <article>
@@ -17,13 +18,13 @@ export default async function SitemapPage() {
                 <div className="space-y-12">
                     {grouped.map((monthData, mIdx) => (
                         <div key={mIdx}>
-                            <h3 className="text-sm mono font-bold uppercase tracking-wider text-zinc-400 mb-6">
+                            <h3 className="text-sm mono font-bold uppercase tracking-wider text-muted mb-6">
                                 {monthData.month}
                             </h3>
                             <div className="space-y-8">
                                 {monthData.weeks.map((week, wIdx) => (
-                                    <div key={wIdx} className="pl-4 border-l border-zinc-100">
-                                        <h4 className="text-xs font-semibold text-zinc-500 mb-4">
+                                    <div key={wIdx} className="pl-4 border-l border-card-border">
+                                        <h4 className="text-xs font-semibold text-muted mb-4">
                                             {week.weekRange}
                                         </h4>
                                         <ul className="space-y-3">
@@ -31,11 +32,11 @@ export default async function SitemapPage() {
                                                 <li key={dIdx}>
                                                     <Link
                                                         href={`/${day.slug}`}
-                                                        className="text-zinc-800 hover:text-violet-600 transition-colors text-sm font-medium"
+                                                        className="text-foreground hover:text-accent transition-colors text-sm font-medium"
                                                     >
                                                         {day.meta.title}
                                                     </Link>
-                                                    <span className="text-zinc-400 text-[10px] mono ml-3 uppercase opacity-60">
+                                                    <span className="text-muted text-[10px] mono ml-3 uppercase opacity-60">
                                                         {day.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                                     </span>
                                                 </li>
@@ -48,7 +49,7 @@ export default async function SitemapPage() {
                     ))}
 
                     {entries.length === 0 && (
-                        <p className="text-zinc-400 italic">No entries found.</p>
+                        <p className="text-muted italic">No entries found.</p>
                     )}
                 </div>
             </ArticleSection>

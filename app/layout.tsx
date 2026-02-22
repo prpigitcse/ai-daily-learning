@@ -75,9 +75,11 @@ export default function RootLayout({
             </span>
           </div>
 
-          <h1 className="text-4xl font-semibold tracking-tight text-foreground mb-3">
-            AI <span className="text-accent">Logbook</span>
-          </h1>
+          <Link href="/" className="hover:opacity-80 transition-opacity">
+            <h1 className="text-4xl font-semibold tracking-tight text-foreground mb-3">
+              AI <span className="text-accent">Logbook</span>
+            </h1>
+          </Link>
           <p className="text-muted text-lg font-light leading-relaxed">
             Understanding intelligent systems from first principles.
           </p>

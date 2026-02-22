@@ -25,7 +25,16 @@ export function extractExplanation(code: string): { explanation?: string; cleanC
 
 
 export async function getEntry(year: string, month: string, day: string): Promise<LearningEntry | null> {
-    const entryPath = path.join(learningDirectory, year, month, day);
+    const yearPath = path.join(learningDirectory, year);
+    if (!fs.existsSync(yearPath)) return null;
+
+    // Find actual folder name (case-insensitive month)
+    const months = fs.readdirSync(yearPath);
+    const actualMonth = months.find(m => m.toLowerCase() === month.toLowerCase());
+
+    if (!actualMonth) return null;
+
+    const entryPath = path.join(yearPath, actualMonth, day);
 
     if (!fs.existsSync(entryPath)) return null;
 
@@ -65,11 +74,16 @@ export async function getEntry(year: string, month: string, day: string): Promis
 
     const date = new Date(parseInt(year), monthMap[month] || 0, parseInt(day));
 
+    const slugifiedTitle = meta.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+
     return {
         year,
         month,
         day,
-        slug: `${year}/${month}/${day}`,
+        slug: `${year}/${month.toLowerCase()}/${day}/${slugifiedTitle}`,
         meta,
         theory: theoryContent,
         math: mathContent,
@@ -99,39 +113,62 @@ export async function getAllEntries(): Promise<LearningEntry[]> {
     return entries.sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 
-export function groupEntries(entries: LearningEntry[]) {
-    const grouped: { [monthKey: string]: { month: string; weeks: { [weekKey: string]: { range: string; days: LearningEntry[] } } } } = {};
+export function groupEntriesByWeek(entries: LearningEntry[]) {
+    const weeksMap: { [weekKey: string]: { range: string; days: LearningEntry[] } } = {};
 
     entries.forEach(entry => {
-        const monthKey = `${entry.month} ${entry.year}`;
-        if (!grouped[monthKey]) {
-            grouped[monthKey] = { month: monthKey, weeks: {} };
-        }
-
         // Calculate week range
         const d = new Date(entry.date);
         const day = d.getDay(); // 0 (Sun) to 6 (Sat)
         const diffToSun = d.getDate() - day;
-        const sun = new Date(d.setDate(diffToSun));
-        const sat = new Date(d.setDate(diffToSun + 6));
+        const sun = new Date(new Date(d).setDate(diffToSun));
+        const sat = new Date(new Date(d).setDate(diffToSun + 6));
 
         const monthShort = (date: Date) => date.toLocaleString('en-US', { month: 'short' });
         const weekKey = `${sun.toISOString().split('T')[0]}_${sat.toISOString().split('T')[0]}`;
         const weekRange = `${monthShort(sun)} ${sun.getDate()} — ${monthShort(sat)} ${sat.getDate()}`;
 
-        if (!grouped[monthKey].weeks[weekKey]) {
-            grouped[monthKey].weeks[weekKey] = { range: weekRange, days: [] };
+        if (!weeksMap[weekKey]) {
+            weeksMap[weekKey] = { range: weekRange, days: [] };
         }
-
-        grouped[monthKey].weeks[weekKey].days.push(entry);
+        weeksMap[weekKey].days.push(entry);
     });
 
-    // Convert to array and sort
-    return Object.values(grouped).map(m => ({
-        month: m.month,
-        weeks: Object.keys(m.weeks).sort((a, b) => b.localeCompare(a)).map(w => ({
-            weekRange: m.weeks[w].range,
-            days: m.weeks[w].days.sort((a, b) => b.date.getTime() - a.date.getTime())
-        }))
-    }));
+    // Sort weeks descending
+    return Object.keys(weeksMap)
+        .sort((a, b) => b.localeCompare(a))
+        .map(weekKey => ({
+            id: weekKey,
+            weekRange: weeksMap[weekKey].range,
+            days: weeksMap[weekKey].days.sort((a, b) => b.date.getTime() - a.date.getTime()),
+            // Store the month/year of the first day for grouping later
+            monthKey: `${weeksMap[weekKey].days[0].month} ${weeksMap[weekKey].days[0].year}`
+        }));
+}
+
+export function groupWeeksByMonth(weeks: any[]) {
+    const grouped: { [monthKey: string]: { month: string; weeks: any[] } } = {};
+
+    weeks.forEach(week => {
+        if (!grouped[week.monthKey]) {
+            grouped[week.monthKey] = { month: week.monthKey, weeks: [] };
+        }
+        grouped[week.monthKey].weeks.push(week);
+    });
+
+    return Object.values(grouped);
+}
+
+export async function getAdjacentEntries(currentDate: Date) {
+    const entries = await getAllEntries();
+    const sorted = entries.sort((a, b) => a.date.getTime() - b.date.getTime()); // Ascending for easier index finding
+
+    const currentIndex = sorted.findIndex(e => e.date.getTime() === currentDate.getTime());
+
+    if (currentIndex === -1) return { prev: null, next: null };
+
+    return {
+        prev: currentIndex > 0 ? sorted[currentIndex - 1] : null,
+        next: currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : null,
+    };
 }

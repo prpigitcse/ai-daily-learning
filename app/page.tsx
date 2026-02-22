@@ -1,25 +1,61 @@
-import { getAllEntries, groupEntries } from "@/lib/parser";
+import { getAllEntries, groupEntriesByWeek, groupWeeksByMonth } from "@/lib/parser";
 import { TimelineMonth } from "@/components/timeline/TimelineMonth";
+import { Pagination } from "@/components/ui/Pagination";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page } = await searchParams;
+  const currentPage = parseInt(page || "1");
+  const weeksPerPage = 2;
+
   const entries = await getAllEntries();
-  const grouped = groupEntries(entries);
+  const allWeeks = groupEntriesByWeek(entries);
+
+  const startIndex = (currentPage - 1) * weeksPerPage;
+  const endIndex = startIndex + weeksPerPage;
+  const paginatedWeeks = allWeeks.slice(startIndex, endIndex);
+  const hasMore = allWeeks.length > endIndex;
+
+  const grouped = groupWeeksByMonth(paginatedWeeks);
+
+  const prevWeek = currentPage > 1 ? allWeeks[startIndex - 1] : null;
+  const nextWeek = hasMore ? allWeeks[endIndex] : null;
 
   return (
-    <div id="log-container" className="space-y-12">
-      {grouped.map((monthData, idx) => (
-        <TimelineMonth
-          key={idx}
-          month={monthData.month}
-          weeks={monthData.weeks}
-        />
-      ))}
+    <div className="relative flex gap-8">
+      <div id="log-container" className="flex-grow space-y-12 pb-12">
+        {grouped.map((monthData: any, idx) => (
+          <TimelineMonth
+            key={idx}
+            month={monthData.month}
+            weeks={monthData.weeks}
+          />
+        ))}
 
-      {entries.length === 0 && (
-        <div className="text-center py-24">
-          <p className="text-zinc-400 italic">No entries found yet. Keep learning!</p>
+        {entries.length === 0 && (
+          <div className="text-center py-24">
+            <p className="text-muted italic">No entries found yet. Keep learning!</p>
+          </div>
+        )}
+      </div>
+
+      <aside className="shrink-0 pt-2 flex flex-col justify-between pb-12">
+        <div className="sticky top-24">
+          <Pagination
+            prev={prevWeek ? { href: `/?page=${currentPage - 1}`, label: prevWeek.weekRange } : null}
+            next={nextWeek ? { href: `/?page=${currentPage + 1}`, label: nextWeek.weekRange } : null}
+          />
         </div>
-      )}
+        <div className="sticky bottom-12">
+          <Pagination
+            prev={prevWeek ? { href: `/?page=${currentPage - 1}`, label: prevWeek.weekRange } : null}
+            next={nextWeek ? { href: `/?page=${currentPage + 1}`, label: nextWeek.weekRange } : null}
+          />
+        </div>
+      </aside>
     </div>
   );
 }

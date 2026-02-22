@@ -1,4 +1,4 @@
-# 📐 Math (20 Mins): What is a Vector?
+# 📐 What is a Vector?
 
 In mathematics, a vector is an ordered list of numbers that represents a point or a direction in a coordinate space. The number of elements in the vector determines its dimension ($n$).
 
