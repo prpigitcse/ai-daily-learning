@@ -4,11 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "tsx lib/ensureMetadata.ts",
-    "build": "tsx lib/ensureMetadata.ts && next build",
+    "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "ensure-metadata": "tsx lib/ensureMetadata.ts"
+    "lint": "eslint"
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
