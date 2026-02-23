@@ -1,6 +1,10 @@
 {
-  "name": "ai-daily-learning",
+  "name": "ai-logbook",
   "version": "0.1.0",
+  "author": {
+    "name": "Pradosh Ranjan Pattanayak",
+    "url": "https://ppradosh.com"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
