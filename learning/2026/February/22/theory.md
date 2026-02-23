@@ -1,5 +1,4 @@
 # 🤖 AI/ML Concept: Feature Representation
-
 Computers do not natively understand real-world concepts like a "house," an "image," or a "song." To feed data into a Machine Learning model, we must translate these entities into vectors. This critical first step is called **feature representation**.
 
 * 🏠 **Tabular Data:** If we are building a model to predict house prices, we might define a house using three features: number of bedrooms, number of bathrooms, and age in years. A 3-bedroom, 2-bathroom house built 15 years ago becomes a data point in 3D space: $\vec{h} = [3, 2, 15]$. 

@@ -71,7 +71,7 @@ export default async function DayPage({ params }: PageProps) {
             {/* Theory Section */}
             <ArticleSection title="The Theory">
                 <div
-                    className="space-y-4"
+                    className="space-y-4 markdown-content"
                     dangerouslySetInnerHTML={{ __html: renderedTheory }}
                 />
             </ArticleSection>
@@ -79,7 +79,7 @@ export default async function DayPage({ params }: PageProps) {
             {/* Math Section */}
             <ArticleSection title="The Math">
                 <div
-                    className="math-container"
+                    className="math-container markdown-content"
                     dangerouslySetInnerHTML={{ __html: renderedMath }}
                 />
             </ArticleSection>

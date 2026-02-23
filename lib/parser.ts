@@ -72,7 +72,7 @@ export async function getEntry(year: string, month: string, day: string): Promis
         'July': 6, 'August': 7, 'September': 8, 'October': 9, 'November': 10, 'December': 11
     };
 
-    const date = new Date(parseInt(year), monthMap[month] || 0, parseInt(day));
+    const date = new Date(parseInt(year), monthMap[actualMonth || month] || 0, parseInt(day));
 
     const slugifiedTitle = meta.title
         .toLowerCase()

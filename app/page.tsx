@@ -13,6 +13,7 @@ export default async function Home({
 
   const entries = await getAllEntries();
   const allWeeks = groupEntriesByWeek(entries);
+  const totalPages = Math.ceil(allWeeks.length / weeksPerPage);
 
   const startIndex = (currentPage - 1) * weeksPerPage;
   const endIndex = startIndex + weeksPerPage;
@@ -25,7 +26,7 @@ export default async function Home({
   const nextWeek = hasMore ? allWeeks[endIndex] : null;
 
   return (
-    <div className="relative flex gap-8">
+    <div className="relative flex flex-col md:flex-row gap-8">
       <div id="log-container" className="flex-grow space-y-12 pb-12">
         {grouped.map((monthData, idx) => (
           <TimelineMonth
@@ -42,20 +43,26 @@ export default async function Home({
         )}
       </div>
 
-      <aside className="shrink-0 pt-2 flex flex-col justify-between pb-12">
-        <div className="sticky top-24">
-          <Pagination
-            prev={prevWeek ? { href: `/?page=${currentPage - 1}`, label: prevWeek.weekRange } : null}
-            next={nextWeek ? { href: `/?page=${currentPage + 1}`, label: nextWeek.weekRange } : null}
-          />
-        </div>
-        <div className="sticky bottom-12">
-          <Pagination
-            prev={prevWeek ? { href: `/?page=${currentPage - 1}`, label: prevWeek.weekRange } : null}
-            next={nextWeek ? { href: `/?page=${currentPage + 1}`, label: nextWeek.weekRange } : null}
-          />
-        </div>
-      </aside>
+      {totalPages > 1 && (
+        <aside className="shrink-0 pt-2 flex flex-col justify-between pb-12">
+          <div className="sticky top-24">
+            <Pagination
+              prev={prevWeek ? { href: `/?page=${currentPage - 1}`, label: prevWeek.weekRange } : null}
+              next={nextWeek ? { href: `/?page=${currentPage + 1}`, label: nextWeek.weekRange } : null}
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
+          </div>
+          <div className="sticky bottom-12">
+            <Pagination
+              prev={prevWeek ? { href: `/?page=${currentPage - 1}`, label: prevWeek.weekRange } : null}
+              next={nextWeek ? { href: `/?page=${currentPage + 1}`, label: nextWeek.weekRange } : null}
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
+          </div>
+        </aside>
+      )}
     </div>
   );
 }

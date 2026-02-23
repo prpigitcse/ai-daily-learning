@@ -10,7 +10,7 @@ export function ExplanationBlock({ explanation }: ExplanationBlockProps) {
             </h3>
 
             <div
-                className="space-y-4 text-sm text-foreground logic-breakdown"
+                className="space-y-4 text-sm text-foreground logic-breakdown markdown-content"
                 dangerouslySetInnerHTML={{ __html: explanation }}
             />
         </div>
