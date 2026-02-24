@@ -201,3 +201,45 @@ body {
   display: block;
   margin-bottom: 0.25rem;
 }
+
+/* ─── Tables ─────────────────────────────────────────────────────────────── */
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  font-size: 0.875rem;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  display: table;
+}
+
+.markdown-content th {
+  background-color: var(--muted-bg);
+  color: var(--foreground);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--card-border);
+}
+
+.markdown-content td {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--card-border);
+  color: var(--muted);
+  transition: background-color 0.2s ease;
+}
+
+.markdown-content tr:hover td {
+  background-color: var(--muted-bg);
+  color: var(--foreground);
+}
+
+/* Mobile Responsive Table */
+@media (max-width: 640px) {
+  .markdown-content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
