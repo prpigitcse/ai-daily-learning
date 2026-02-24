@@ -10,10 +10,10 @@ Code Explanation:
 """
 
 class Vector:
-    def __init__(self, attributes):
+    def __init__(self, attributes: list[float]):
         self.attributes = attributes
     
-    def __sub__(self, other):
+    def __sub__(self, other: "Vector") -> "Vector":
         if isinstance(other, Vector):
             if len(self.attributes) != len(other.attributes):
                 raise ValueError("Vectors must have the same dimension for subtraction.")
@@ -21,7 +21,7 @@ class Vector:
         else:
             raise TypeError("Unsupported operand type for -: 'Vector' and '{}'".format(type(other).__name__))
         
-    def __repr__(self):
+    def __repr__(self) -> str:
         attributes_str = ", ".join("{:.2f}".format(a) for a in self.attributes)
         return "Vector({})".format(attributes_str)
 

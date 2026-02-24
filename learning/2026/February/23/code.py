@@ -2,17 +2,17 @@
 Code Explanation:
 - `import math`: We import the standard math library to access the square root function, `math.sqrt()`.
 - `def distance(self, other)`: A new method in our `Vector` class to calculate how far apart two vector instances are.
-- `diff = self - other`: We leverage the `__sub__` magic method we built in [What is a Vector?](/2026/february/22/what-is-a-vector-translating-the-real-world-into-code) This elegantly handles the $(x_i - y_i)$ portion of the formula and includes the dimension validation checks automatically.
+- `diff = self - other`: We leverage the `__sub__` magic method we built in [What is a Vector? Translating the Real World into Code](/2026/february/22/what-is-a-vector-translating-the-real-world-into-code) This elegantly handles the $(x_i - y_i)$ portion of the formula and includes the dimension validation checks automatically.
 - `sum(x**2 for x in diff.attributes)`: We iterate through the newly created difference vector, squaring each element `x**2` to ensure all distances are positive, and then sum them together. This represents $\sum (x_i - y_i)^2$.
 - `return math.sqrt(...)`: Finally, we take the square root of the total sum, completing the Euclidean distance formula.
 """
 import math
 
 class Vector:
-    def __init__(self, attributes):
+    def __init__(self, attributes: list[float]):
         self.attributes = attributes
     
-    def __sub__(self, other):
+    def __sub__(self, other: "Vector") -> "Vector":
         if isinstance(other, Vector):
             if len(self.attributes) != len(other.attributes):
                 raise ValueError("Vectors must have the same dimension for subtraction.")
@@ -21,7 +21,7 @@ class Vector:
             raise TypeError(f"Unsupported operand type for -: 'Vector' and '{type(other).__name__}'")
 
 
-    def distance(self, other):
+    def distance(self, other: "Vector") -> float:
         # 1. Calculate the difference vector
         diff = self - other
 
@@ -36,7 +36,7 @@ class Vector:
 
         return distance
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         attribute_str = ", ".join(f"{a:.2f}" for a in self.attributes)
         return f"Vector({attribute_str})"
 
