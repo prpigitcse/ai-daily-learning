@@ -1,4 +1,4 @@
-# 📐 Math: Euclidean Distance
+# Math: Euclidean Distance
 
 To understand how far apart two points are in space, we use Euclidean distance. This is the exact straight-line distance between two points, acting as an $n$-dimensional extension of the Pythagorean theorem ($a^2 + b^2 = c^2$).
 

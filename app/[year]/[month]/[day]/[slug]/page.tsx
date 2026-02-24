@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getEntry, getAllEntries, getAdjacentEntries } from '@/lib/parser';
@@ -67,40 +68,89 @@ export default async function DayPage({ params }: PageProps) {
     const renderedExplanation = entry.explanation ? await renderMarkdown(entry.explanation) : null;
 
     return (
-        <article>
-            {/* Theory Section */}
-            <ArticleSection title="The Theory">
-                <div
-                    className="space-y-4 markdown-content"
-                    dangerouslySetInnerHTML={{ __html: renderedTheory }}
-                />
-            </ArticleSection>
+        <>
+            {/* Breadcrumb */}
+            <nav aria-label="Breadcrumb" className="mb-6">
+                <ol className="flex items-center gap-2 text-sm text-muted">
+                    <li>
+                        <Link href="/" className="hover:text-accent transition-colors">
+                            Home
+                        </Link>
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+                    </li>
+                    <li>{year}</li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+                    </li>
+                    <li className="capitalize">{month}</li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+                    </li>
+                    <li className="text-foreground font-medium">Day {day}</li>
+                </ol>
+            </nav>
 
-            {/* Math Section */}
-            <ArticleSection title="The Math">
-                <div
-                    className="math-container markdown-content"
-                    dangerouslySetInnerHTML={{ __html: renderedMath }}
-                />
-            </ArticleSection>
+            <article>
+                {/* Header */}
+                <header className="mb-8">
+                    <h1 className="text-2xl font-bold tracking-tight mb-4">
+                        {entry.meta.title}
+                    </h1>
+                    <div className="flex gap-3">
+                        {entry.meta.ai_topic && (
+                            <span className="text-[10px] mono text-muted font-medium tracking-tight">
+                                #{entry.meta.ai_topic}
+                            </span>
+                        )}
+                        {entry.meta.math_topic && (
+                            <span className="text-[10px] mono text-muted font-medium tracking-tight">
+                                #{entry.meta.math_topic}
+                            </span>
+                        )}
+                        {entry.meta.code_topic && (
+                            <span className="text-[10px] mono text-muted font-medium tracking-tight">
+                                #{entry.meta.code_topic}
+                            </span>
+                        )}
+                    </div>
+                </header>
 
-            {/* Code Section */}
-            <ArticleSection title="The Code">
-                <div className="space-y-8">
-                    <CodeBlock code={entry.code} />
-                    {renderedExplanation && (
-                        <ExplanationBlock explanation={renderedExplanation} />
-                    )}
+                {/* Theory Section */}
+                <ArticleSection title="The Theory" icon="🧠" variant="card">
+                    <div
+                        className="space-y-4 markdown-content"
+                        dangerouslySetInnerHTML={{ __html: renderedTheory }}
+                    />
+                </ArticleSection>
+
+                {/* Math Section */}
+                <ArticleSection title="The Math" icon="📐" variant="card">
+                    <div
+                        className="math-container markdown-content"
+                        dangerouslySetInnerHTML={{ __html: renderedMath }}
+                    />
+                </ArticleSection>
+
+                {/* Code Section */}
+                <ArticleSection title="The Code" icon="⚙️">
+                    <div className="space-y-8">
+                        <CodeBlock code={entry.code} />
+                        {renderedExplanation && (
+                            <ExplanationBlock explanation={renderedExplanation} />
+                        )}
+                    </div>
+                </ArticleSection>
+
+                {/* Pagination Section */}
+                <div className="mt-20 flex justify-center border-t border-card-border pt-12">
+                    <Pagination
+                        prev={adjacency.next ? { href: `/${adjacency.next.slug}`, label: adjacency.next.meta.title } : null}
+                        next={adjacency.prev ? { href: `/${adjacency.prev.slug}`, label: adjacency.prev.meta.title } : null}
+                    />
                 </div>
-            </ArticleSection>
-
-            {/* Pagination Section */}
-            <div className="mt-20 flex justify-center border-t border-card-border pt-12">
-                <Pagination
-                    prev={adjacency.next ? { href: `/${adjacency.next.slug}`, label: adjacency.next.meta.title } : null}
-                    next={adjacency.prev ? { href: `/${adjacency.prev.slug}`, label: adjacency.prev.meta.title } : null}
-                />
-            </div>
-        </article>
+            </article>
+        </>
     );
 }
