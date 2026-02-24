@@ -98,20 +98,20 @@ export default async function DayPage({ params }: PageProps) {
                     <h1 className="text-2xl font-bold tracking-tight mb-4">
                         {entry.meta.title}
                     </h1>
-                    <div className="flex gap-3">
+                    <div className="flex gap-2 text-sm text-muted">
                         {entry.meta.ai_topic && (
-                            <span className="text-[10px] mono text-muted font-medium tracking-tight">
-                                #{entry.meta.ai_topic}
+                            <span className="px-2 py-0.5 rounded-md bg-muted-bg font-medium">
+                                {entry.meta.ai_topic}
                             </span>
                         )}
                         {entry.meta.math_topic && (
-                            <span className="text-[10px] mono text-muted font-medium tracking-tight">
-                                #{entry.meta.math_topic}
+                            <span className="px-2 py-0.5 rounded-md bg-muted-bg font-medium">
+                                {entry.meta.math_topic}
                             </span>
                         )}
                         {entry.meta.code_topic && (
-                            <span className="text-[10px] mono text-muted font-medium tracking-tight">
-                                #{entry.meta.code_topic}
+                            <span className="px-2 py-0.5 rounded-md bg-muted-bg font-medium">
+                                {entry.meta.code_topic}
                             </span>
                         )}
                     </div>
