@@ -20,8 +20,52 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Logbook",
-  description: "A structured public trail of learning artificial intelligence.",
+  metadataBase: new URL("https://ai.ppradosh.com"),
+  title: {
+    default: "AI Logbook — Artificial Intelligence Learning Journey",
+    template: "%s | AI Logbook",
+  },
+  description: "A structured public trail of learning artificial intelligence from first principles.",
+  keywords: [
+    "Artificial Intelligence",
+    "AI",
+    "Machine Learning",
+    "Deep Learning",
+    "Neural Networks",
+    "Learning Logbook",
+    "Pradosh Ranjan Pattanayak"
+  ],
+  authors: [{ name: "Pradosh Ranjan Pattanayak" }],
+  creator: "Pradosh Ranjan Pattanayak",
+  publisher: "Pradosh Ranjan Pattanayak",
+  category: "Education",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "AI Logbook — Artificial Intelligence Learning Journey",
+    description: "A structured public trail of learning artificial intelligence from first principles.",
+    type: "website",
+    siteName: "AI Logbook",
+    url: "/",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Logbook — Artificial Intelligence Learning Journey",
+    description: "A structured public trail of learning artificial intelligence from first principles.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
