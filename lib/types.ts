@@ -17,6 +17,7 @@ export interface LearningEntry {
     code: string;
     explanation?: string;
     excerpt: string;
+    excerptHtml?: string;
     date: Date;
 }
 

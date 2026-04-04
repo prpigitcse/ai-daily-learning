@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { LearningEntry, MetaData, GroupedEntries } from './types';
+import { renderMarkdown } from './markdown';
 
 const learningDirectory = path.join(process.cwd(), 'learning');
 
@@ -65,6 +66,8 @@ export async function getEntry(year: string, month: string, day: string): Promis
         .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Remove links but keep text
         .trim();
 
+    const excerptHtml = await renderMarkdown(excerpt);
+
 
     // Convert month name to number for Date object
     const monthMap: { [key: string]: number } = {
@@ -90,6 +93,7 @@ export async function getEntry(year: string, month: string, day: string): Promis
         code: cleanCode,
         explanation,
         excerpt,
+        excerptHtml,
         date,
     };
 }
