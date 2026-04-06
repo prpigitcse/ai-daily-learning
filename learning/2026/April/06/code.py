@@ -45,7 +45,7 @@ class Matrix:
                 for row1, row2 in zip(self.data, other.data)
             ])
         else:
-            return NotImplemented
+            raise TypeError(f"Unsupported operand type for +: 'Matrix' and '{type(other).__name__}'")
 
     def __repr__(self) -> str:
         """Helper to print the matrix cleanly in the terminal."""
