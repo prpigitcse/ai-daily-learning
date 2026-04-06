@@ -37,16 +37,15 @@ class Matrix:
 
     def __add__(self, other: "Matrix") -> "Matrix":
         """Matrix addition: adds elements of identically shaped matrices."""
-        if isinstance(other, "Matrix"):
+        if isinstance(other, Matrix):
             if self.shape != other.shape:
                 raise ValueError("Matrices must have the same shape for addition")
+            return Matrix([
+                [a + b for a, b in zip(row1, row2)]
+                for row1, row2 in zip(self.data, other.data)
+            ])
         else:
             return NotImplemented
-
-        return Matrix([
-            [a + b for a, b in zip(row1, row2)]
-            for row1, row2 in zip(self.data, other.data)
-        ])
 
     def __repr__(self) -> str:
         """Helper to print the matrix cleanly in the terminal."""
