@@ -1,4 +1,9 @@
-import { getAllEntries, groupEntriesByWeek, groupWeeksByMonth } from "@/lib/parser";
+import { notFound } from "next/navigation";
+import {
+  getAllEntries,
+  groupEntriesByWeek,
+  groupWeeksByMonth,
+} from "@/lib/parser";
 import { TimelineMonth } from "@/components/timeline/TimelineMonth";
 import { Pagination } from "@/components/ui/Pagination";
 
@@ -8,12 +13,22 @@ export default async function Home({
   searchParams: Promise<{ page?: string }>;
 }) {
   const { page } = await searchParams;
-  const currentPage = parseInt(page || "1");
+  const currentPage = parseInt(page || "1", 10);
   const weeksPerPage = 2;
 
   const entries = await getAllEntries();
   const allWeeks = groupEntriesByWeek(entries);
   const totalPages = Math.ceil(allWeeks.length / weeksPerPage);
+
+  const isValidPage = !page || /^[1-9]\d*$/.test(page);
+  const noEntries = allWeeks.length === 0;
+  if (
+    !isValidPage ||
+    currentPage < 1 ||
+    (noEntries ? currentPage > 1 : currentPage > totalPages)
+  ) {
+    notFound();
+  }
 
   const startIndex = (currentPage - 1) * weeksPerPage;
   const endIndex = startIndex + weeksPerPage;
@@ -30,8 +45,22 @@ export default async function Home({
       {totalPages > 1 && (
         <div className="flex justify-center border-b border-card-border pb-10">
           <Pagination
-            prev={prevWeek ? { href: `/?page=${currentPage - 1}`, label: prevWeek.weekRange } : null}
-            next={nextWeek ? { href: `/?page=${currentPage + 1}`, label: nextWeek.weekRange } : null}
+            prev={
+              prevWeek
+                ? {
+                    href: `/?page=${currentPage - 1}`,
+                    label: prevWeek.weekRange,
+                  }
+                : null
+            }
+            next={
+              nextWeek
+                ? {
+                    href: `/?page=${currentPage + 1}`,
+                    label: nextWeek.weekRange,
+                  }
+                : null
+            }
             currentPage={currentPage}
             totalPages={totalPages}
           />
@@ -49,7 +78,9 @@ export default async function Home({
 
         {entries.length === 0 && (
           <div className="text-center py-24">
-            <p className="text-muted italic">No entries found yet. Keep learning!</p>
+            <p className="text-muted italic">
+              No entries found yet. Keep learning!
+            </p>
           </div>
         )}
       </div>
@@ -57,8 +88,22 @@ export default async function Home({
       {totalPages > 1 && (
         <div className="flex justify-center border-t border-card-border pt-12">
           <Pagination
-            prev={prevWeek ? { href: `/?page=${currentPage - 1}`, label: prevWeek.weekRange } : null}
-            next={nextWeek ? { href: `/?page=${currentPage + 1}`, label: nextWeek.weekRange } : null}
+            prev={
+              prevWeek
+                ? {
+                    href: `/?page=${currentPage - 1}`,
+                    label: prevWeek.weekRange,
+                  }
+                : null
+            }
+            next={
+              nextWeek
+                ? {
+                    href: `/?page=${currentPage + 1}`,
+                    label: nextWeek.weekRange,
+                  }
+                : null
+            }
             currentPage={currentPage}
             totalPages={totalPages}
           />
