@@ -1,6 +1,6 @@
 # AI/ML Concept: The Batch Forward Pass
 
-In (The Capstone: Object-Oriented ML Architecture)[/2026/april/04/the-capstone-object-oriented-ml-architecture], to make predictions for 3 houses, we had to run our predict method 3 separate times. In Python, this requires a `for` loop, which is notoriously slow for large datasets.
+In [The Capstone: Object-Oriented ML Architecture](/2026/april/04/the-capstone-object-oriented-ml-architecture), to make predictions for 3 houses, we had to run our predict method 3 separate times. In Python, this requires a `for` loop, which is notoriously slow for large datasets.
 
 By using Matrix-Vector multiplication, we can push the entire dataset through the model in a single mathematical operation. 
 * Let $X$ be our Design Matrix (e.g., $1000$ houses, $4$ features each).
