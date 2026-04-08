@@ -1,3 +1,10 @@
+"""
+Code Explanation:
+- `def dot_matrix(self, other: "Matrix") -> "Matrix":` We define the method to multiply our Matrix by another Matrix.
+- `if self.number_of_cols != other.number_of_rows:` The ultimate dimensionality check. A matrix of shape $(m, n)$ can only be multiplied by a matrix of shape $(n, p)$.
+- `sum(self.data[i][k] * other.data[k][j] ...)`: This is the exact translation of the mathematical summation $C_{ij} = \sum A_{ik} B_{kj}$. It computes the dot product of row `i` from the first matrix and column `j` from the second matrix.
+- `for j in range(...)` and `for i in range(...)`: The outer loops build the new matrix $C$, ensuring its final shape is $(m, p)$.
+"""
 class Matrix:
     def __init__(self, data: list[list[float]]):
         if data:
@@ -64,3 +71,29 @@ class Matrix:
         rows_str = "\n  ".join(str(row) for row in self.data)
         return f"Matrix(\n  {rows_str}\n)"
     
+    
+# --- Example Usage: Pushing Data through a Hidden Layer ---
+
+# Dataset X: 2 Houses, 4 Features (Beds, Baths, Age, SqFt)
+X = Matrix([
+    [3.0, 2.0, 15.0, 2000.0],
+    [4.0, 3.0, 10.0, 2500.0]
+])
+
+# Weight Matrix W1: Maps 4 input features to 2 hidden concepts ("Size Score", "Modernity Score")
+# Shape must be (4, 2) so inner dimensions match X's (2, 4)
+W1 = Matrix([
+    [10.0, 0.0],   # Weights for Beds
+    [5.0,  0.0],   # Weights for Baths
+    [0.0, -2.0],   # Weights for Age
+    [1.0,  0.0]    # Weights for SqFt
+])
+
+# Forward pass through the hidden layer: X * W1
+hidden_layer_output = X.dot_matrix(W1)
+
+print(f"Dataset Shape: {X.shape}")
+print(f"Weights Shape: {W1.shape}")
+print("\nHidden Layer Output (New Transformed Dataset):")
+print(hidden_layer_output)
+print(f"Output Shape: {hidden_layer_output.shape}")
