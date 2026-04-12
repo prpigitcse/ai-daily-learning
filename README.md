@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Logbook — Public AI Learning Journal
+
+A structured learning journal for artificial intelligence and machine learning concepts, captured as daily learning entries.
+
+🌐 **Live site:** [https://ai.ppradosh.com](https://ai.ppradosh.com)
+
+---
+
+## Tech Stack
+
+- **Framework:** [Next.js](https://nextjs.org) (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **Markdown:** remark / rehype
+- **Analytics:** Vercel Analytics
+- **Deployment:** Vercel
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Learning Content Structure
 
-## Learn More
+Learning entries are organised by date under the `learning/` directory:
 
-To learn more about Next.js, take a look at the following resources:
+```
+learning/
+└── 2026/
+    └── April/
+        └── 08/
+            ├── code.py
+            ├── math.md
+            ├── meta.md
+            └── theory.md
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Each entry can include:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `meta.md` — entry metadata
+- `theory.md` — concept explanation and intuition
+- `math.md` — formulas, proofs, and math notes
+- `code.py` — implementation examples and experiments
+- `error-insight.md` - insight developed and error faced
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Validation & Build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Run validation before building:
+
+```bash
+npm run validate
+```
+
+Build the production app:
+
+```bash
+npm run build
+```
+
+Start the production server:
+
+```bash
+npm start
+```
+
+---
+
+## Project Structure
+
+```
+app/
+├── components/
+├── [year]/[month]/[day]/[slug]/
+├── privacy/
+├── sitemap/
+├── globals.css
+├── layout.tsx
+└── page.tsx
+lib/
+├── markdown.ts
+├── parser.ts
+├── types.ts
+└── validate.ts
+learning/      # dated AI learning entries
+.github/ISSUE_TEMPLATE/  # issue templates for content and feature requests
+```
+
+---
+
+## Adding a New Entry
+
+1. Create a new folder for the entry date under `learning/YYYY/Month/DD/`.
+2. Add `meta.md`, `theory.md`, and optional `math.md` / `code.py`.
+3. Follow the existing file structure for consistency.
+4. The site automatically discovers new entries via the build process.
+
+---
+
+## Contributing
+
+- Keep entries focused on AI concepts, first-principles reasoning, and clear explanations.
+- Prefer concise examples and code that illustrate the idea.
+- Use `.github/ISSUE_TEMPLATE/` for bug reports, improvement ideas, and feature requests.
+
+---
+
+## Notes
+
+- The site supports math notation, code highlighting, and responsive theming.
+- AI Logbook is intended as an educational journal, not a polished product roadmap.
+- All content is created for personal learning and public reference.
