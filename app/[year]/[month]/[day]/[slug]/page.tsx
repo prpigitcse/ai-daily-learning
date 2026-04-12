@@ -65,6 +65,9 @@ export default async function DayPage({ params }: PageProps) {
     const adjacency = await getAdjacentEntries(entry.date);
     const renderedTheory = await renderMarkdown(entry.theory);
     const renderedMath = await renderMarkdown(entry.math);
+    const renderedErrorInsight = entry.errorInsight !== undefined
+        ? await renderMarkdown(entry.errorInsight)
+        : null;
     const renderedExplanation = entry.explanation ? await renderMarkdown(entry.explanation) : null;
 
     return (
@@ -132,6 +135,15 @@ export default async function DayPage({ params }: PageProps) {
                         dangerouslySetInnerHTML={{ __html: renderedMath }}
                     />
                 </ArticleSection>
+
+                {renderedErrorInsight !== null && (
+                    <ArticleSection title="Insights and Mistakes" icon="💡" variant="card">
+                        <div
+                            className="space-y-4 markdown-content"
+                            dangerouslySetInnerHTML={{ __html: renderedErrorInsight }}
+                        />
+                    </ArticleSection>
+                )}
 
                 {/* Code Section */}
                 <ArticleSection title="The Code" icon="⚙️">

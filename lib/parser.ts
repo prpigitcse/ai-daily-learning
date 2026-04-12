@@ -42,6 +42,10 @@ export async function getEntry(year: string, month: string, day: string): Promis
     const metaContent = fs.readFileSync(path.join(entryPath, 'meta.md'), 'utf8');
     const theoryContent = fs.readFileSync(path.join(entryPath, 'theory.md'), 'utf8');
     const mathContent = fs.readFileSync(path.join(entryPath, 'math.md'), 'utf8');
+    const errorInsightPath = path.join(entryPath, 'error-insight.md');
+    const errorInsightContent = fs.existsSync(errorInsightPath)
+        ? fs.readFileSync(errorInsightPath, 'utf8')
+        : undefined;
     const codeContent = fs.readFileSync(path.join(entryPath, 'code.py'), 'utf8');
 
     // Manual parse of meta.md key-value pairs
@@ -90,6 +94,7 @@ export async function getEntry(year: string, month: string, day: string): Promis
         meta,
         theory: theoryContent,
         math: mathContent,
+        errorInsight: errorInsightContent,
         code: cleanCode,
         explanation,
         excerpt,

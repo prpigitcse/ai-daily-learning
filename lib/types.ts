@@ -14,6 +14,7 @@ export interface LearningEntry {
     meta: MetaData;
     theory: string;
     math: string;
+    errorInsight?: string;
     code: string;
     explanation?: string;
     excerpt: string;
