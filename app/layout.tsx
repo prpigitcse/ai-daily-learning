@@ -99,7 +99,7 @@ export default function RootLayout({
           <ThemeToggle />
         </div>
 
-        <header className="max-w-2xl mx-auto pt-24 pb-16 px-6 text-center">
+        <header className="max-w-2xl mx-auto pt-24 pb-8 px-6 text-center">
           <Link href="/">
             <div className="w-16 h-16 flex items-center justify-center mb-6 mx-auto hover:scale-105 active:scale-95 transition-transform cursor-pointer">
               <Image
