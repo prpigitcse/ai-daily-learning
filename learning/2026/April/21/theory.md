@@ -1,12 +1,7 @@
-# AI/ML Concept: Linear in Weights, Non-Linear in Features
+# AI/ML Concept: Proving Your Representation
 
-"Linear regression is not weak. It’s actually very powerful if you give it the right representation."
+Mean Squared Error (MSE) is great for the Gradient Descent loop, but it is terrible for human evaluation. An MSE of 15,000 doesn't mean anything unless you know the scale of the dataset. $R^2$ normalizes the error into a scale-free ratio, acting much like a percentage score.
 
-When you add a $x^2$ column or a $\sin(x)$ column to your matrix, the model is still executing a strictly linear equation: 
-$$\hat{y} = w_1 x_1 + w_2 x_1^2 + w_3 \sin(x_2) + b$$
+By implementing $R^2$, we can run an A/B test to prove why feature engineering is so powerful. 
 
-
-
-The algorithm is just scaling weights ($w_1, w_2, w_3$) and adding them up. It is entirely linear with respect to the *weights*. But because the *input features* are curved, the final prediction line that the model outputs is bent perfectly to match the chaos of reality. 
-
-Feature engineering is the art of giving your linear model a non-linear vocabulary.
+When you train your model on the raw matrix, it will struggle to draw a straight line through parabolic temperatures and seasonal sine waves. Its RSS will be high, resulting in a low $R^2$ score. When you train on the engineered matrix, it will effortlessly bend to fit the data, dropping the RSS and skyrocketing the $R^2$ score. This metric scientifically proves that "Linear Regression is powerful if you give it the right representation."
