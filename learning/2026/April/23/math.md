@@ -1,8 +1,6 @@
 # Math: The Complete Regularized Update
 
-We do not need to invent any new equations today; we just need to orchestrate them into the Batch Gradient Descent loop. 
-
-During the `.fit()` phase, the loop must calculate the error, derive the base gradients, and then immediately add the chosen penalty (Ridge $L_2$, Lasso $L_1$, or ElasticNet) to the weight gradients before taking a step.
+The Batch Gradient Descent loop integrates regularization by calculating the error, deriving the base gradients, and then immediately adding the chosen mathematical penalty (Ridge $L_2$, Lasso $L_1$, or ElasticNet) to the weight gradients before taking a step.
 
 1. **Forward Pass:** $\vec{\hat{y}} = X\vec{w} + b$
 2. **Base Gradients:**
