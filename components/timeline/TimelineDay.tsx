@@ -22,10 +22,12 @@ export function TimelineDay({ day }: TimelineDayProps) {
                     </h3>
                 </Link>
             </header>
-            <div 
-                className="text-muted text-[15px] leading-relaxed mb-3 markdown-content excerpt-content" 
-                dangerouslySetInnerHTML={{ __html: day.excerptHtml || day.excerpt }} 
-            />
+            {(day.excerptHtml || day.excerpt) && (
+                <div 
+                    className="text-muted text-[15px] leading-relaxed mb-3 markdown-content excerpt-content" 
+                    dangerouslySetInnerHTML={{ __html: day.excerptHtml || day.excerpt || "" }} 
+                />
+            )}
             <div className="flex gap-3">
                 {day.meta.ai_topic && (
                     <span className="text-[10px] mono text-muted font-medium tracking-tight">

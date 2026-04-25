@@ -76,18 +76,26 @@ body {
   white-space: pre-wrap;
 }
 
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol {
+  margin-bottom: 1rem;
+}
+
+.markdown-content > *:last-child {
+  margin-bottom: 0;
+}
+
 .markdown-content h1,
 .markdown-content h2,
 .markdown-content h3,
 .markdown-content h4 {
   margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-.markdown-content h1:first-child,
-.markdown-content h2:first-child,
-.markdown-content p:first-child {
-  margin-top: 0;
+.markdown-content > *:first-child {
+  margin-top: 0 !important;
 }
 
 .markdown-content a:hover {

@@ -40,13 +40,22 @@ export async function getEntry(year: string, month: string, day: string): Promis
     if (!fs.existsSync(entryPath)) return null;
 
     const metaContent = fs.readFileSync(path.join(entryPath, 'meta.md'), 'utf8');
-    const theoryContent = fs.readFileSync(path.join(entryPath, 'theory.md'), 'utf8');
-    const mathContent = fs.readFileSync(path.join(entryPath, 'math.md'), 'utf8');
+    const theoryPath = path.join(entryPath, 'theory.md');
+    const theoryContent = fs.existsSync(theoryPath) ? fs.readFileSync(theoryPath, 'utf8') : undefined;
+
+    const architecturePath = path.join(entryPath, 'architecture.md');
+    const architectureContent = fs.existsSync(architecturePath) ? fs.readFileSync(architecturePath, 'utf8') : undefined;
+
+    const mathPath = path.join(entryPath, 'math.md');
+    const mathContent = fs.existsSync(mathPath) ? fs.readFileSync(mathPath, 'utf8') : undefined;
+
     const errorInsightPath = path.join(entryPath, 'error-insight.md');
     const errorInsightContent = fs.existsSync(errorInsightPath)
         ? fs.readFileSync(errorInsightPath, 'utf8')
         : undefined;
-    const codeContent = fs.readFileSync(path.join(entryPath, 'code.py'), 'utf8');
+
+    const codePath = path.join(entryPath, 'code.py');
+    const codeContent = fs.existsSync(codePath) ? fs.readFileSync(codePath, 'utf8') : undefined;
 
     // Manual parse of meta.md key-value pairs
     const meta: MetaData = { title: '' };
@@ -60,17 +69,24 @@ export async function getEntry(year: string, month: string, day: string): Promis
 
     if (meta.title === '') meta.title = `${month} ${day}, ${year}`;
 
-    const { explanation, cleanCode } = extractExplanation(codeContent);
+    const { explanation, cleanCode } = codeContent ? extractExplanation(codeContent) : { explanation: undefined, cleanCode: undefined };
 
-    // Excerpt is the first paragraph of theory.md, stripped of markdown symbols
-    const paragraphs = theoryContent.split('\n\n');
-    let firstBodyParagraph = paragraphs.find(p => !p.trim().startsWith('#')) || paragraphs[0];
-    const excerpt = firstBodyParagraph
-        .replace(/[#*`]/g, '')
-        .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Remove links but keep text
-        .trim();
+    // Excerpt is the first paragraph of theory.md or architecture.md, stripped of markdown symbols
+    let excerptContent = theoryContent || architectureContent || '';
+    let excerpt = '';
+    let excerptHtml;
 
-    const excerptHtml = await renderMarkdown(excerpt);
+    if (excerptContent) {
+        const paragraphs = excerptContent.split('\n\n');
+        let firstBodyParagraph = paragraphs.find(p => !p.trim().startsWith('#')) || paragraphs[0];
+        if (firstBodyParagraph) {
+            excerpt = firstBodyParagraph
+                .replace(/[#*`]/g, '')
+                .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Remove links but keep text
+                .trim();
+            excerptHtml = await renderMarkdown(excerpt);
+        }
+    }
 
 
     // Convert month name to number for Date object
@@ -93,6 +109,7 @@ export async function getEntry(year: string, month: string, day: string): Promis
         slug: `${year}/${month.toLowerCase()}/${day}/${slugifiedTitle}`,
         meta,
         theory: theoryContent,
+        architecture: architectureContent,
         math: mathContent,
         errorInsight: errorInsightContent,
         code: cleanCode,

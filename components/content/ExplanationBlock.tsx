@@ -11,7 +11,7 @@ export function ExplanationBlock({ explanation }: ExplanationBlockProps) {
 
             <div className="rounded-xl border border-card-border bg-card p-6">
                 <div
-                    className="space-y-4 text-sm text-muted logic-breakdown markdown-content"
+                    className="text-sm text-muted logic-breakdown markdown-content"
                     dangerouslySetInnerHTML={{ __html: explanation }}
                 />
             </div>

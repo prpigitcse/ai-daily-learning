@@ -25,19 +25,24 @@ function walkEntries(dir: string): string[] {
 function validateEntries() {
     console.log('🔍 Starting Data Integrity Validation...\n');
     const entryPaths = walkEntries(learningDirectory);
-    const requiredFiles = ['meta.md', 'theory.md', 'math.md', 'code.py'];
     let errors = 0;
 
     for (const entryPath of entryPaths) {
         const relativePath = path.relative(learningDirectory, entryPath);
         const folderFiles = fs.readdirSync(entryPath);
 
-        // 1. Check for required files
-        for (const file of requiredFiles) {
-            if (!folderFiles.includes(file)) {
-                console.error(`❌ [${relativePath}] Missing required file: ${file}`);
-                errors++;
-            }
+        // 1. Check for required meta.md
+        if (!folderFiles.includes('meta.md')) {
+            console.error(`❌ [${relativePath}] Missing required file: meta.md`);
+            errors++;
+        }
+
+        // 2. Check that at least one content file exists
+        const contentFiles = ['theory.md', 'architecture.md', 'math.md', 'code.py'];
+        const hasContent = contentFiles.some(file => folderFiles.includes(file));
+        if (!hasContent) {
+            console.error(`❌ [${relativePath}] Folder must contain at least one content file (e.g. theory.md, architecture.md, etc.)`);
+            errors++;
         }
 
         // 2. Check for docstring in code.py

@@ -12,12 +12,13 @@ export interface LearningEntry {
     day: string;
     slug: string; // YYYY/Month/DD
     meta: MetaData;
-    theory: string;
-    math: string;
+    theory?: string;
+    architecture?: string;
+    math?: string;
     errorInsight?: string;
-    code: string;
+    code?: string;
     explanation?: string;
-    excerpt: string;
+    excerpt?: string;
     excerptHtml?: string;
     date: Date;
 }

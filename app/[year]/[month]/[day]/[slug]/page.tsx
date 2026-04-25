@@ -34,17 +34,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     return {
         title: `${entry.meta.title} — AI Logbook`,
-        description: entry.excerpt,
+        description: entry.excerpt || '',
         openGraph: {
             title: `${entry.meta.title} — AI Logbook`,
-            description: entry.excerpt,
+            description: entry.excerpt || '',
             type: 'article',
             url: `https://ai.ppradosh.com/${entry.slug}`,
         },
         twitter: {
             card: 'summary_large_image',
             title: `${entry.meta.title} — AI Logbook`,
-            description: entry.excerpt,
+            description: entry.excerpt || '',
         },
         alternates: {
             canonical: `https://ai.ppradosh.com/${entry.slug}`,
@@ -63,8 +63,9 @@ export default async function DayPage({ params }: PageProps) {
     if (slug !== expectedSlug) notFound();
 
     const adjacency = await getAdjacentEntries(entry.date);
-    const renderedTheory = await renderMarkdown(entry.theory);
-    const renderedMath = await renderMarkdown(entry.math);
+    const renderedTheory = entry.theory ? await renderMarkdown(entry.theory) : null;
+    const renderedArchitecture = entry.architecture ? await renderMarkdown(entry.architecture) : null;
+    const renderedMath = entry.math ? await renderMarkdown(entry.math) : null;
     const renderedErrorInsight = entry.errorInsight !== undefined
         ? await renderMarkdown(entry.errorInsight)
         : null;
@@ -121,39 +122,55 @@ export default async function DayPage({ params }: PageProps) {
                 </header>
 
                 {/* Theory Section */}
-                <ArticleSection title="The Theory" icon="🧠" variant="card">
-                    <div
-                        className="space-y-4 markdown-content"
-                        dangerouslySetInnerHTML={{ __html: renderedTheory }}
-                    />
-                </ArticleSection>
+                {renderedTheory !== null && (
+                    <ArticleSection title="The Theory" icon="🧠" variant="card">
+                        <div
+                            className="markdown-content"
+                            dangerouslySetInnerHTML={{ __html: renderedTheory }}
+                        />
+                    </ArticleSection>
+                )}
+
+                {/* Architecture Section */}
+                {renderedArchitecture !== null && (
+                    <ArticleSection title="Architecture" icon="🏗️" variant="card">
+                        <div
+                            className="markdown-content"
+                            dangerouslySetInnerHTML={{ __html: renderedArchitecture }}
+                        />
+                    </ArticleSection>
+                )}
 
                 {/* Math Section */}
-                <ArticleSection title="The Math" icon="📐" variant="card">
-                    <div
-                        className="math-container markdown-content"
-                        dangerouslySetInnerHTML={{ __html: renderedMath }}
-                    />
-                </ArticleSection>
+                {renderedMath !== null && (
+                    <ArticleSection title="The Math" icon="📐" variant="card">
+                        <div
+                            className="math-container markdown-content"
+                            dangerouslySetInnerHTML={{ __html: renderedMath }}
+                        />
+                    </ArticleSection>
+                )}
 
                 {renderedErrorInsight !== null && (
                     <ArticleSection title="Insights and Mistakes" icon="💡" variant="card">
                         <div
-                            className="space-y-4 markdown-content"
+                            className="markdown-content"
                             dangerouslySetInnerHTML={{ __html: renderedErrorInsight }}
                         />
                     </ArticleSection>
                 )}
 
                 {/* Code Section */}
-                <ArticleSection title="The Code" icon="⚙️">
-                    <div className="space-y-8">
-                        <CodeBlock code={entry.code} />
-                        {renderedExplanation && (
-                            <ExplanationBlock explanation={renderedExplanation} />
-                        )}
-                    </div>
-                </ArticleSection>
+                {entry.code && (
+                    <ArticleSection title="The Code" icon="⚙️">
+                        <div className="space-y-8">
+                            <CodeBlock code={entry.code} />
+                            {renderedExplanation && (
+                                <ExplanationBlock explanation={renderedExplanation} />
+                            )}
+                        </div>
+                    </ArticleSection>
+                )}
 
                 {/* Pagination Section */}
                 <div className="mt-20 flex justify-center border-t border-card-border pt-12">
